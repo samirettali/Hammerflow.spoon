@@ -218,16 +218,28 @@ local function showHelper(keyFuncNameTable)
    end
    table.sort(sortedKeyFuncNameTable, function(a, b) return compareLetters(a.keyName, b.keyName) end)
 
+   local maxlength = -1
+
+   for _, value in ipairs(sortedKeyFuncNameTable) do
+     local keyName = value.keyName
+     local funcName = value.funcName
+     count = count + 1
+     local newEntry = keyName..' → '..funcName
+     if string.len(newEntry) > maxlength then
+       maxlength = string.len(newEntry)
+     end
+    end
+
    for _, value in ipairs(sortedKeyFuncNameTable) do
       local keyName = value.keyName
       local funcName = value.funcName
       count = count + 1
       local newEntry = keyName..' → '..funcName
       -- make sure each entry is of the same length
-      if string.len(newEntry) > obj.helperEntryLengthInChar then
-         newEntry = string.sub(newEntry, 1, obj.helperEntryLengthInChar - 2)..'..'
-      elseif string.len(newEntry) < obj.helperEntryLengthInChar then
-         newEntry = newEntry..string.rep(' ', obj.helperEntryLengthInChar - string.len(newEntry))
+      if string.len(newEntry) > maxlength then
+         newEntry = string.sub(newEntry, 1, maxlength - 2)..'..'
+      elseif string.len(newEntry) < maxlength then
+         newEntry = newEntry..string.rep(' ', maxlength - string.len(newEntry))
       end
       -- create new line for every helperEntryEachLine entries
       if count % (obj.helperEntryEachLine + 1) == 0 then
